@@ -1,0 +1,31 @@
+{
+  "version": 4,
+  "state": {
+    "location": "station",
+    "position": [
+      350.0,
+      520.0
+    ],
+    "evidence_ids": [],
+    "evidence_records": {},
+    "flags": [],
+    "trust": {},
+    "reputation": 100,
+    "health": 100,
+    "current_day": 1,
+    "time_slot": 0,
+    "ending": "",
+    "play_seconds": 0.0,
+    "hypotheses": {},
+    "story": {
+      "case_accepted": false,
+      "anomaly_announced": false,
+      "qte_complete": false,
+      "mvp_complete": false
+    },
+    "statistics": {
+      "inspections": 0,
+      "analyses": 0
+    }
+  }
+}

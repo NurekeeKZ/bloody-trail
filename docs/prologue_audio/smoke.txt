@@ -1,0 +1,5 @@
+pygame 2.6.1 (SDL 2.28.4, Python 3.12.14)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+SMOKE OK: start, menu, exploration, investigation, assistant, map, dialogue, pause, settings_sound, settings_controls, settings_qte, settings_privacy, load, dlc, qte, inventory, board, object_computer, evidence_photo, evidence_document, sokolov_unlocked, board_confirmed, results, game_over
+MVP1 SMOKE OK: 6 additional story screens; 30 total
+LAB12 SMOKE OK: 5 additional screens; 35 total; no devices activated

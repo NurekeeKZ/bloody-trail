@@ -1,0 +1,21 @@
+{
+  "capture_performed": false,
+  "microphones_enumerated": 8,
+  "microphone_names": [
+    "Переназначение звуковых устр. - Input [MME]",
+    "Mic (MCHOSE S9 PRO) [MME]",
+    "Стерео микшер (Realtek(R) Audio [MME]",
+    "Первичный драйвер записи звука [Windows DirectSound]",
+    "Mic (MCHOSE S9 PRO) [Windows DirectSound]",
+    "Стерео микшер (Realtek(R) Audio) [Windows DirectSound]",
+    "Mic (MCHOSE S9 PRO) [Windows WASAPI]",
+    "Стерео микшер (Realtek(R) Audio) [Windows WASAPI]"
+  ],
+  "output_names": [
+    "Динамики (Bloody S10)",
+    "Odyssey G40B (NVIDIA High Definition Audio)",
+    "F24G3xTF (NVIDIA High Definition Audio)",
+    "Динамики (MCHOSE S9 PRO)"
+  ],
+  "output_error": ""
+}

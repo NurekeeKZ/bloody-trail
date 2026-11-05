@@ -1,0 +1,59 @@
+{
+  "version": 4,
+  "state": {
+    "location": "station",
+    "position": [
+      515.2037078831443,
+      424.337020020345
+    ],
+    "evidence_ids": [
+      "order",
+      "photo"
+    ],
+    "evidence_records": {
+      "order": {
+        "day": 1,
+        "slot": 0,
+        "verified": false,
+        "source": "Полицейский участок",
+        "related": []
+      },
+      "photo": {
+        "day": 1,
+        "slot": 0,
+        "verified": false,
+        "source": "Полицейский участок",
+        "related": []
+      }
+    },
+    "flags": [],
+    "trust": {},
+    "reputation": 100,
+    "health": 100,
+    "current_day": 1,
+    "time_slot": 0,
+    "ending": "",
+    "play_seconds": 104.53400000000008,
+    "hypotheses": {
+      "order|photo": {
+        "evidence": [
+          "order",
+          "photo"
+        ],
+        "rule": null,
+        "status": "rejected",
+        "reason": "Игрок отклонил гипотезу: доказательств пока недостаточно. Её можно проверить повторно."
+      }
+    },
+    "story": {
+      "case_accepted": true,
+      "anomaly_announced": false,
+      "qte_complete": false,
+      "mvp_complete": false
+    },
+    "statistics": {
+      "inspections": 2,
+      "analyses": 0
+    }
+  }
+}

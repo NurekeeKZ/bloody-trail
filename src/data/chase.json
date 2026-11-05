@@ -1,0 +1,33 @@
+[
+  {
+    "id": "jump",
+    "type": "single",
+    "key": "space",
+    "label": "SPACE — перепрыгнуть забор"
+  },
+  {
+    "id": "direction",
+    "type": "direction",
+    "label": "A — переулок / D — людная улица"
+  },
+  {
+    "id": "door",
+    "type": "burst",
+    "key": "e",
+    "count": 3,
+    "label": "E × 3 — закрыть тяжёлую дверь"
+  },
+  {
+    "id": "sprint",
+    "type": "hold",
+    "key": "shift",
+    "seconds": 0.9,
+    "label": "Удерживайте SHIFT — ускориться"
+  },
+  {
+    "id": "push",
+    "type": "single",
+    "key": "f",
+    "label": "F — оттолкнуть преследователя"
+  }
+]

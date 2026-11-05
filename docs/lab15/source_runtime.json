@@ -1,0 +1,21 @@
+{
+  "frozen": false,
+  "devices_opened": false,
+  "video_driver": "windows",
+  "startup": true,
+  "save_load": true,
+  "all_rooms": true,
+  "content_access": true,
+  "ending": true,
+  "journal": true,
+  "commands": true,
+  "audio_initialized": true,
+  "sensor_runtime": {
+    "vosk_silence": true,
+    "opencv_blank": true,
+    "sounddevice_import": true,
+    "devices_opened": false
+  },
+  "worker_exitcode": 0,
+  "passed": true
+}

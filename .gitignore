@@ -1,0 +1,14 @@
+﻿__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+saves/
+dist/
+build/
+*.zip
+*.exe
+assets/reference/
+assets/**/*.zip
+.vscode/
+.idea/

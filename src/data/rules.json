@@ -1,0 +1,81 @@
+[
+  {
+    "id": "pattern",
+    "requires": [
+      "photo",
+      "blood"
+    ],
+    "text": "Совпадение следов подтверждено двумя источниками.",
+    "pair": [
+      "photo",
+      "blood"
+    ]
+  },
+  {
+    "id": "history",
+    "requires": [
+      "metadata",
+      "archive",
+      "sigma"
+    ],
+    "text": "Удаление материалов связано с делом 2020 года и «Сигмой».",
+    "pair": [
+      "metadata",
+      "archive"
+    ]
+  },
+  {
+    "id": "route",
+    "requires": [
+      "anna",
+      "transit",
+      "pass"
+    ],
+    "text": "Маршрут из показаний подтверждён журналом и пропуском Сарсенова.",
+    "pair": [
+      "anna",
+      "transit"
+    ]
+  },
+  {
+    "id": "identity",
+    "requires": [
+      "archive",
+      "sigma",
+      "pass",
+      "server"
+    ],
+    "text": "Архив и независимая копия подтверждают цепочку действий Сарсенова.",
+    "pair": [
+      "pass",
+      "server"
+    ]
+  },
+  {
+    "id": "initial_anomaly",
+    "requires": [
+      "photo",
+      "metadata"
+    ],
+    "pair": [
+      "photo",
+      "metadata"
+    ],
+    "optional": true,
+    "text": "Снимок связан с записью, в которой удалены метаданные. Нужна проверка исходного дела 2020 года; личность убийцы этим не установлена."
+  },
+  {
+    "id": "blood_history",
+    "optional": true,
+    "pair": [
+      "EVIDENCE_BLOOD_MARK_2020",
+      "EVIDENCE_BLOOD_MARK_2035"
+    ],
+    "requires": [
+      "EVIDENCE_BLOOD_MARK_2020",
+      "EVIDENCE_BLOOD_MARK_2035",
+      "archive"
+    ],
+    "text": "Преступления 2020 и 2035 годов связаны совпадающим следом и независимым архивным протоколом. Это не устанавливает личность виновного."
+  }
+]

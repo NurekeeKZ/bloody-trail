@@ -1,0 +1,172 @@
+{
+  "timestamp_utc": "2026-10-28T20:20:53.194581+00:00",
+  "type": "offline, no devices",
+  "text_attempts": [
+    {
+      "attempt": 1,
+      "input": "Покажи улики",
+      "expected": "evidence",
+      "actual": "evidence",
+      "correct": true
+    },
+    {
+      "attempt": 2,
+      "input": "Анализируй запись",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 3,
+      "input": "Повтори показания",
+      "expected": "testimony",
+      "actual": "testimony",
+      "correct": true
+    },
+    {
+      "attempt": 4,
+      "input": "Какие есть версии",
+      "expected": "versions",
+      "actual": "versions",
+      "correct": true
+    },
+    {
+      "attempt": 5,
+      "input": "Сравни следы",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 6,
+      "input": "ПОКАЖИ УЛИКИ",
+      "expected": "evidence",
+      "actual": "evidence",
+      "correct": true
+    },
+    {
+      "attempt": 7,
+      "input": "АНАЛИЗИРУЙ ЗАПИСЬ",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 8,
+      "input": "ПОВТОРИ ПОКАЗАНИЯ",
+      "expected": "testimony",
+      "actual": "testimony",
+      "correct": true
+    },
+    {
+      "attempt": 9,
+      "input": "КАКИЕ ЕСТЬ ВЕРСИИ",
+      "expected": "versions",
+      "actual": "versions",
+      "correct": true
+    },
+    {
+      "attempt": 10,
+      "input": "СРАВНИ СЛЕДЫ",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 11,
+      "input": "покажи улики.",
+      "expected": "evidence",
+      "actual": "evidence",
+      "correct": true
+    },
+    {
+      "attempt": 12,
+      "input": "анализируй запись.",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 13,
+      "input": "повтори показания.",
+      "expected": "testimony",
+      "actual": "testimony",
+      "correct": true
+    },
+    {
+      "attempt": 14,
+      "input": "какие есть версии.",
+      "expected": "versions",
+      "actual": "versions",
+      "correct": true
+    },
+    {
+      "attempt": 15,
+      "input": "сравни следы.",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 16,
+      "input": "  Покажи улики  ",
+      "expected": "evidence",
+      "actual": "evidence",
+      "correct": true
+    },
+    {
+      "attempt": 17,
+      "input": "  Анализируй запись  ",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    },
+    {
+      "attempt": 18,
+      "input": "  Повтори показания  ",
+      "expected": "testimony",
+      "actual": "testimony",
+      "correct": true
+    },
+    {
+      "attempt": 19,
+      "input": "  Какие есть версии  ",
+      "expected": "versions",
+      "actual": "versions",
+      "correct": true
+    },
+    {
+      "attempt": 20,
+      "input": "  Сравни следы  ",
+      "expected": "analyze",
+      "actual": "analyze",
+      "correct": true
+    }
+  ],
+  "text_correct": 20,
+  "text_accuracy": 1.0,
+  "opencv": "4.10.0",
+  "blank_frames": [
+    {
+      "brightness": 0,
+      "present": false,
+      "reliable": false,
+      "motion": 0.0
+    },
+    {
+      "brightness": 80,
+      "present": false,
+      "reliable": false,
+      "motion": 0.0
+    },
+    {
+      "brightness": 255,
+      "present": false,
+      "reliable": false,
+      "motion": 0.0
+    }
+  ],
+  "vosk_synthetic_silence": {
+    "text": ""
+  }
+}

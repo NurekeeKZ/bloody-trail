@@ -1,0 +1,89 @@
+test_assistant_synchronizes_existing_hypothesis (test_release.ReleaseTests.test_assistant_synchronizes_existing_hypothesis) ... FAIL
+test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) ... 
+  test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='qte_failures') ... FAIL
+  test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='deduction_mistakes') ... FAIL
+  test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='anna_respect') ... FAIL
+  test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='perfect_interview') ... FAIL
+test_main_has_freeze_support_before_parser (test_release.ReleaseTests.test_main_has_freeze_support_before_parser) ... FAIL
+test_missing_source_rejected_at_load (test_release.ReleaseTests.test_missing_source_rejected_at_load) ... FAIL
+test_out_of_time_nonterminal_save_rejected (test_release.ReleaseTests.test_out_of_time_nonterminal_save_rejected) ... FAIL
+
+======================================================================
+FAIL: test_assistant_synchronizes_existing_hypothesis (test_release.ReleaseTests.test_assistant_synchronizes_existing_hypothesis)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 39, in test_assistant_synchronizes_existing_hypothesis
+    self.assertEqual(self.game.state.hypotheses[key]['status'],'confirmed')
+AssertionError: 'rejected' != 'confirmed'
+- rejected
++ confirmed
+
+
+======================================================================
+FAIL: test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='qte_failures')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 32, in test_invalid_beta_statistics_rejected_at_load
+    with self.subTest(name=name),self.assertRaises(ValueError):self.game.saves.load()
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='deduction_mistakes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 32, in test_invalid_beta_statistics_rejected_at_load
+    with self.subTest(name=name),self.assertRaises(ValueError):self.game.saves.load()
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='anna_respect')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 32, in test_invalid_beta_statistics_rejected_at_load
+    with self.subTest(name=name),self.assertRaises(ValueError):self.game.saves.load()
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invalid_beta_statistics_rejected_at_load (test_release.ReleaseTests.test_invalid_beta_statistics_rejected_at_load) (name='perfect_interview')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 32, in test_invalid_beta_statistics_rejected_at_load
+    with self.subTest(name=name),self.assertRaises(ValueError):self.game.saves.load()
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_main_has_freeze_support_before_parser (test_release.ReleaseTests.test_main_has_freeze_support_before_parser)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 48, in test_main_has_freeze_support_before_parser
+    self.assertIn('freeze_support',calls)
+AssertionError: 'freeze_support' not found in ['main']
+
+======================================================================
+FAIL: test_missing_source_rejected_at_load (test_release.ReleaseTests.test_missing_source_rejected_at_load)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 27, in test_missing_source_rejected_at_load
+    with self.assertRaises(ValueError):self.game.saves.load()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_out_of_time_nonterminal_save_rejected (test_release.ReleaseTests.test_out_of_time_nonterminal_save_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\bloody\bloody_trail\tests\test_release.py", line 42, in test_out_of_time_nonterminal_save_rejected
+    with self.assertRaises(ValueError):self.game.saves.load()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.417s
+
+FAILED (failures=8)
+pygame 2.6.1 (SDL 2.28.4, Python 3.12.14)
+Hello from the pygame community. https://www.pygame.org/contribute.html

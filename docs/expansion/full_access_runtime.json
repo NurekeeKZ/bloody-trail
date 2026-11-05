@@ -1,0 +1,26 @@
+{
+  "frozen": true,
+  "devices_opened": false,
+  "video_driver": "windows",
+  "prologue_flashback": true,
+  "input_endpoints": 8,
+  "device_status": "Найдено микрофонов: 8. Захват выключен.",
+  "output_default_reinit": true,
+  "startup": true,
+  "save_load": true,
+  "all_rooms": true,
+  "content_access": true,
+  "full_access_ui": true,
+  "ending": true,
+  "journal": true,
+  "commands": true,
+  "audio_initialized": true,
+  "sensor_runtime": {
+    "vosk_silence": true,
+    "opencv_blank": true,
+    "sounddevice_import": true,
+    "devices_opened": false
+  },
+  "worker_exitcode": 0,
+  "passed": true
+}
