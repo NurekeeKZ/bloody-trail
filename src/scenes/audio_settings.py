@@ -24,6 +24,7 @@ class DeviceList(Scene):
 
 
 class MicrophoneTest(Assistant):
+    conversation=False
     def __init__(self,game):
         super().__init__(game)
         self.response='Тест: нажмите микрофон, разрешите попытку и скажите «Покажи улики». Команда здесь не изменяет дело.'

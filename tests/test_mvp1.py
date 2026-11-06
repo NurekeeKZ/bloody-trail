@@ -97,13 +97,13 @@ class MVP1Tests(unittest.TestCase):
         self.key(pygame.K_b)
         board = self.game.scenes.current
         self.assertIsInstance(board, Board)
+        board.event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=board.question_rects()['initial_anomaly'].center))
         for eid in ('photo', 'metadata'):
             board.event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=board.cards[eid].center))
-        self.click('Создать / выбрать гипотезу')
         self.assertFalse(self.game.can_enter('apartment'))
-        self.click('Проверить / подтвердить')
+        self.click('Проверить вывод')
         self.assertEqual(self.game.evidence.score, 50)
-        self.click('Проверить / подтвердить')
+        self.click('Проверить вывод')
         self.assertEqual(self.game.evidence.score, 50)
         self.assertFalse(self.game.evidence.can_finalize())
         self.key(pygame.K_ESCAPE)

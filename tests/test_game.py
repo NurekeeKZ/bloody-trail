@@ -203,7 +203,9 @@ class IntegrationTests(unittest.TestCase):
                 guard = GuardDialogue(self.game)
                 guard.answer(False)
                 guard.answer(False)
-        self.assertEqual(len(self.game.state.evidence_ids), 14)
+        # 14 route items + the Day 2 victim report collected on entering the archive.
+        self.assertEqual(len(self.game.state.evidence_ids), 15)
+        self.assertIn('expert_death', self.game.state.evidence_ids)
         assistant = Assistant(self.game)
         assistant.input = 'сравни следы'
         assistant.event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_RETURN))

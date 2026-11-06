@@ -61,6 +61,23 @@ class EvidenceManager:
                 hypothesis.update(status='confirmed', reason=rule['text'] + f' Все необходимые источники собраны ({len(rule["requires"])}).')
         return hypothesis['reason']
 
+    def check_deduction(self, rule_id, chosen):
+        """Slot board: the player must name every source of one conclusion; returns (confirmed, message)."""
+        rule = next(r for r in self.rules if r['id'] == rule_id)
+        required, chosen = set(rule['requires']), set(chosen)
+        if not chosen.issubset(self.state.evidence_ids):
+            raise ValueError('Выберите только найденные улики.')
+        if rule_id in self.state.flags:
+            return True, rule['text']
+        if chosen == required:
+            return True, self.evaluate(self.propose(*rule['pair']))
+        if not required.issubset(self.state.evidence_ids):
+            return False, 'Для этого вывода найдены ещё не все материалы. Продолжайте осмотр; ошибка не засчитана.'
+        self.state.statistics['deduction_mistakes'] = self.state.statistics.get('deduction_mistakes', 0) + 1
+        self.on_change('mistake', rule_id)
+        return False, (f'Не сходится: подходят {len(chosen & required)} из {len(required)}. '
+                       'Совместное наличие предметов не доказывает связь.')
+
     def reject(self, key):
         hypothesis = self.state.hypotheses[key]
         if hypothesis['status'] == 'confirmed':

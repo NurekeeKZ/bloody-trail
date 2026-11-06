@@ -5,7 +5,8 @@ root = Path(SPECPATH)
 datas=[(str(root/'assets/portraits'),'assets/portraits'),(str(root/'src/data'),'src/data'),(str(root/'assets/evidence'),'assets/evidence'),
        (str(root/'assets/rooms'),'assets/rooms'),
        (str(root/'assets/models/vosk-model-small-ru-0.22'),'assets/models/vosk-model-small-ru-0.22'),
-       (str(root/'assets/models/voice_model_manifest.json'),'assets/models')]
+       (str(root/'assets/models/voice_model_manifest.json'),'assets/models'),
+       (str(root/'assets/models/emotion-ferplus-8.onnx'),'assets/models')]
 binaries=[]
 hiddenimports=[]
 for package in ('vosk','sounddevice','_sounddevice_data','cv2'):

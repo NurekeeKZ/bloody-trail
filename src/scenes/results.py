@@ -18,6 +18,9 @@ class Results(Scene):
         super().__init__(game)
         self.ending = ending
         self.title, self.text = self.TEXTS[ending]
+        if ending == 'arrest':
+            from src.systems.campaign import epilogue
+            self.text = (self.text + ' ' + epilogue(game.state)).strip()
         if persist:
             game.state.ending = ending
             game.record_result()

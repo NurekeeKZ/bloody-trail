@@ -36,7 +36,10 @@ def audio_worker(output, stop, options):
                 raise RuntimeError('Нет модели Vosk: запустите tools/download_voice_model.py')
             SetLogLevel(-1)
             model = Model(str(path))
-            recognizer = KaldiRecognizer(model, rate, json.dumps(options['phrases'] + ['[unk]'], ensure_ascii=False))
+            phrases = options.get('phrases')
+            # No phrase list means free speech for the conversation with N.U.R.S.
+            recognizer = (KaldiRecognizer(model, rate) if phrases is None else
+                          KaldiRecognizer(model, rate, json.dumps(phrases + ['[unk]'], ensure_ascii=False)))
         if stop.is_set():
             return
         chunks = queue.Queue(maxsize=24)

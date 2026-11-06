@@ -8,7 +8,9 @@
 6. `python tools/prepare_demo.py`; затем `python tools/package_release.py`.
 7. Передать `dist/BloodyTrail-Windows-x64-RC1.zip` и `.sha256`. Целиком распаковать и запустить BloodyTrail.exe.
 
-Не переносить только EXE: `_internal` обязателен. Сохранения по умолчанию вне bundle в `%LOCALAPPDATA%/BloodyTrail/saves`; `--save-dir` задаёт альтернативу. Python и модель включены, сеть для игры не нужна.
+Не переносить только EXE: `_internal` обязателен. Сохранения по умолчанию вне bundle в `%LOCALAPPDATA%/BloodyTrail/saves`; `--save-dir` задаёт альтернативу. Python и модель Vosk включены, сеть для игры не нужна.
+
+Разговорный N.U.R.S. (RC4.1) использует локальную Ollama, которая в сборку **не входит**. На целевом ПК установить Ollama и выполнить `ollama pull qwen2.5:3b`. Без неё игра полностью работает, а панель N.U.R.S. переходит в режим команд. Модель и адрес меняются переменными `BLOODYTRAIL_OLLAMA_MODEL` и `BLOODYTRAIL_OLLAMA_URL` ([AI.md](../AI.md)).
 
 Непроверенное: другой чистый ПК, SmartScreen, подпись издателя, аппаратная точность. Сборка не подписана. Синтетический release-check не является аппаратным acceptance test.
 

@@ -40,7 +40,7 @@ class BetaTests(unittest.TestCase):
             if spot.get('evidence') in ('anna','transit'): continue
             detail = ObjectInspection(self.game,room,spot)
             for action in detail.actions:
-                if action['type']=='collect' and action['evidence'] not in self.game.state.evidence_ids:
+                if action['type']=='collect' and action['evidence'] not in self.game.state.evidence_ids and detail.allowed(action):
                     self.assertTrue(detail.execute(action), (location,action))
 
         from scenario_steps import solve_location

@@ -226,6 +226,51 @@ class Lab12Tests(unittest.TestCase):
         self.assertTrue(moved['reliable'])
         self.assertAlmostEqual(moved['motion'], 1.0)
 
+    def test_face_motion_falls_back_to_face_center_without_eyes(self):
+        try:
+            import numpy as np
+            import cv2
+        except ImportError:
+            self.skipTest('optional OpenCV absent')
+        from unittest.mock import Mock
+        processor = FaceProcessor(emotion_model=None)
+        processor.face = Mock()
+        processor.eyes = Mock()
+        processor.face.detectMultiScale.return_value = [(100, 100, 200, 200)]
+        processor.eyes.detectMultiScale.return_value = []
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        self.assertFalse(processor.process(frame, .1)['reliable'])
+        still = processor.process(frame, .1)
+        self.assertTrue(still['reliable'])
+        self.assertEqual(still['motion'], 0)
+        processor.face.detectMultiScale.return_value = [(120, 100, 200, 200)]
+        self.assertAlmostEqual(processor.process(frame, .1)['motion'], 1.0)
+
+    def test_composure_signal_and_calm_trial(self):
+        from src.ai.signals import composure
+        self.assertEqual(composure({}), (True, None))
+        self.assertEqual(composure({'neutral': .7, 'sadness': .2, 'happiness': .1}), (True, 'neutral'))
+        self.assertEqual(composure({'neutral': .3, 'sadness': .7}), (True, 'sadness'))
+        self.assertEqual(composure({'neutral': .2, 'happiness': .8}), (False, 'happiness'))
+        trial = CalmTrial()
+        result = None
+        while result is None:
+            result = trial.step(.1, True, True, 0, composed=False)
+        self.assertFalse(result)
+
+    def test_emotion_model_runs_on_face_crop(self):
+        try:
+            import numpy as np
+            import cv2
+        except ImportError:
+            self.skipTest('optional OpenCV absent')
+        processor = FaceProcessor()
+        if processor.emotion_net is None:
+            self.skipTest('emotion model absent')
+        scores = processor.expression(np.full((480, 640), 128, dtype=np.uint8), (100, 100, 200, 200))
+        self.assertEqual(len(scores), 8)
+        self.assertAlmostEqual(sum(scores.values()), 1.0, places=2)
+
     def test_missing_model_child_reports_error_and_releases(self):
         # A missing model is checked before any stream opens; no hardware capture.
         session = SensorSession()

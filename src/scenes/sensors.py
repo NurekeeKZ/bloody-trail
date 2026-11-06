@@ -4,7 +4,18 @@ import pygame
 from src.scenes.base import Scene, Message
 from src.core.config import CYAN, MUTED, RED
 from src.ai.devices import SensorSession
-from src.ai.signals import CalmTrial, SilenceTrial
+from src.ai.signals import CalmTrial, SilenceTrial, EMOTIONS, composure
+
+EMOTION_NAMES = {'neutral': 'спокойствие', 'happiness': 'радость', 'surprise': 'удивление', 'sadness': 'грусть',
+                 'anger': 'злость', 'disgust': 'отвращение', 'fear': 'страх', 'contempt': 'презрение'}
+GUARD_REACTIONS = {'happiness': 'Айдос: «Смешно тебе, детектив?»',
+                   'surprise': 'Айдос: «Чего глаза округлил? Нервничаешь?»',
+                   'anger': 'Айдос: «Злишься? Значит, есть что скрывать».',
+                   'fear': 'Айдос: «Боишься? Правильно».',
+                   'disgust': 'Айдос: «Морщишься? Здесь тебе не участок».',
+                   'contempt': 'Айдос: «Смотришь свысока? Зря».',
+                   'neutral': 'Айдос: «…Хм. Каменное лицо».',
+                   'sadness': 'Айдос: «Устал? Ночь длинная».'}
 
 
 class SensorConsent(Message):
@@ -13,8 +24,8 @@ class SensorConsent(Message):
         super().__init__(game, 'Разрешить ' + name + ' для этой попытки?',
                          'Обработка только на этом ПК. Аудио и видео не записываются и не отправляются. '
                          'Во время работы виден индикатор. Esc или «Отключить» прекращает захват. '
-                         'Можно отказаться и пройти тот же эпизод кнопками. Камера измеряет наличие лица и движение, '
-                         'а не эмоции, ложь или психологическое состояние.')
+                         'Можно отказаться и пройти тот же эпизод кнопками. Камера измеряет наличие лица, движение '
+                         'и выражение лица как игровой сигнал — не ложь и не психологическое состояние.')
         def accept():
             game.scenes.pop()  # Remove consent before opening device; settings never auto-start it.
             accepted()
@@ -33,6 +44,10 @@ class SensorChallenge(Scene):
         self.motion = 0.0
         self.present = False
         self.reliable = False
+        self.emotions = {}
+        self.composed = True
+        self.dominant = None
+        self.reaction = ''
         self.manual_until = 0.0
         self.manual_clock = 0.0
         self.last_sample = time.monotonic()
@@ -133,7 +148,13 @@ class SensorChallenge(Scene):
         else:
             self.present, self.motion = event['present'], event['motion']
             self.reliable = event['reliable']
-            self.message = 'Одно лицо и оба глаза в кадре; избегайте резких перемещений. Это игровой сигнал.'
+            self.emotions = event.get('emotions') or {}
+            self.composed, dominant = composure(self.emotions) if self.present else (True, None)
+            if dominant and dominant != self.dominant:
+                self.reaction = GUARD_REACTIONS.get(dominant, '')
+            self.dominant = dominant
+            self.message = ('Держите лицо в кадре и не меняйтесь в лице: охранник провоцирует. Это игровой сигнал. '
+                            + self.reaction).strip()
 
     def update(self, dt):
         if self.mode == 'manual':
@@ -166,7 +187,7 @@ class SensorChallenge(Scene):
                 fresh = time.monotonic() - self.last_sample <= .5 and dt <= .5
                 result = None
                 if self.kind == 'calm':
-                    result = self.trial.step(dt, self.present and fresh, self.reliable and fresh, self.motion)
+                    result = self.trial.step(dt, self.present and fresh, self.reliable and fresh, self.motion, self.composed)
                 elif self.calibration_time >= 2:
                     result = self.trial.step(dt, self.level if fresh else 0)
                 if result is not None:
@@ -194,7 +215,26 @@ class SensorChallenge(Scene):
             self.game.ui.text(screen, label, (50, 365), 22, CYAN)
             pygame.draw.rect(screen, MUTED, (50, 410, 1130, 16))
             pygame.draw.rect(screen, CYAN, (50, 410, round(1130 * min(1, progress)), 16))
+            if self.kind == 'calm' and self.mode == 'sensor':
+                self.draw_expression(screen)
         self.draw_buttons(screen)
+
+    def draw_expression(self, screen):
+        """Live game-signal readout so a failed attempt is explainable; no image leaves the camera process."""
+        ui = self.game.ui
+        if not self.emotions:
+            status = 'Лицо не найдено' if not self.present else 'Модель мимики недоступна: учитываются только лицо и движение'
+            ui.text(screen, status, (50, 445), 19, MUTED)
+            return
+        state = 'держите лицо' if self.composed else 'эмоция заметна'
+        ui.text(screen, f'Мимика: {EMOTION_NAMES.get(self.dominant, "—")} · {state} · движение {self.motion:.2f}/0.65',
+                (50, 440), 19, CYAN if self.composed else RED)
+        for i, name in enumerate(EMOTIONS):
+            x, y = 50 + (i % 4) * 285, 470 + (i // 4) * 32
+            value = self.emotions.get(name, 0)
+            ui.text(screen, EMOTION_NAMES[name], (x, y), 16, MUTED)
+            pygame.draw.rect(screen, MUTED, (x + 115, y + 5, 150, 10), 1)
+            pygame.draw.rect(screen, CYAN if name in ('neutral', 'sadness') else RED, (x + 115, y + 5, round(150 * value), 10))
 
 
 class GuardDialogue(Scene):

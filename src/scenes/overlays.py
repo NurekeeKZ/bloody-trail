@@ -86,6 +86,9 @@ from src.scenes.evidence_board import Board
 
 
 class Assistant(Scene):
+    # Free phrases go to the local model; subclasses that only test commands switch this off.
+    conversation = True
+
     def __init__(self, game):
         super().__init__(game)
         self.input = ''
@@ -94,7 +97,8 @@ class Assistant(Scene):
         self.voice_status = 'Микрофон выключен'
         self.level = -90.0
         self.device_warning = ''
-        self.response = 'Прототип N.U.R.S.: локальный классификатор команд готов. Введите запрос или выберите действие ниже.'
+        self.pending = None
+        self.response = 'N.U.R.S. на связи. Спросите о деле своими словами — голосом или текстом — или выберите действие ниже.'
         self.button('Назад', (44, 632, 200, 50), game.scenes.pop)
         for i, (label, intent) in enumerate([('Улики', 'evidence'), ('Сравнить', 'analyze'), ('Карта', 'map'), ('Подсказка', 'help')]):
             self.button(label, (260 + i * 235, 632, 220, 50), lambda intent=intent: self.execute(intent))
@@ -118,13 +122,16 @@ class Assistant(Scene):
     def start_voice(self):
         try:
             self.voice.start('voice', consent=True, model=str(ROOT / 'assets/models/vosk-model-small-ru-0.22'),
-                             phrases=self.game.command_router.phrases, device_key=self.game.settings.microphone_device, gain=self.game.settings.microphone_gain)
+                             phrases=None if self.conversation else self.game.command_router.phrases,
+                             device_key=self.game.settings.microphone_device, gain=self.game.settings.microphone_gain)
             self.voice_status = 'Загрузка локальной модели…'
         except Exception as exc:
             self.voice_status = 'Устройство недоступно'
             self.response = 'Микрофон недоступен: ' + str(exc)
 
     def update(self, dt):
+        if self.pending is not None and self.pending.done:
+            self.finish_conversation()
         for event in self.voice.poll():
             if event['type'] == 'sample':
                 self.level = event['db']
@@ -138,11 +145,14 @@ class Assistant(Scene):
             elif event['type'] == 'text':
                 text = event['text']
                 self.on_exit()
-                intent = self.game.command_router.resolve(text, voice=True)
+                router = self.game.command_router
+                intent = router.match(text) if self.conversation else router.resolve(text, voice=True)
                 if intent:
                     self.execute(intent)
                     self.voice_status = 'Команда распознана'
                     self.response = self.device_warning + ' Распознано: «' + text + '». ' + self.response
+                elif self.conversation and text.strip() and text != '[unk]':
+                    self.converse(text)
                 else:
                     self.voice_status = 'Не удалось распознать'
                     self.response = 'Распознано: «' + (text or 'тишина') + '». Команда не распознана. Повторите запись или выберите действие вручную.'
@@ -165,12 +175,44 @@ class Assistant(Scene):
             if event.key == pygame.K_BACKSPACE:
                 self.input = self.input[:-1]
             elif event.key == pygame.K_RETURN:
-                intent = self.game.command_router.resolve(self.input)
+                router = self.game.command_router
+                intent = router.match(self.input) if self.conversation else router.resolve(self.input)
                 if intent:
                     self.execute(intent)
+                elif self.conversation and self.input.strip():
+                    self.converse(self.input.strip())
                 else:
                     self.response = 'Не распознала. Используйте одну из команд или кнопки ниже.'
                 self.input = ''
+
+    def converse(self, text):
+        """Ask the local model; the answer arrives in update() and never changes the game state."""
+        if self.pending is not None:
+            self.voice_status = 'N.U.R.S. ещё отвечает на предыдущий вопрос'
+            return
+        self.pending = self.game.nurs.ask(text)
+        self.voice_status = 'N.U.R.S. анализирует…'
+        self.response = self.quote(text) + ' N.U.R.S. сверяет материалы дела…'
+
+    @staticmethod
+    def quote(text):
+        # The reply panel fits about five lines above the microphone buttons.
+        return 'Вы: «' + (text if len(text) <= 80 else text[:79] + '…') + '».'
+
+    def finish_conversation(self):
+        request, self.pending = self.pending, None
+        if request.status == 'offline':
+            # Without the model the old command classifier keeps the panel usable.
+            intent = self.game.command_router.resolve(request.question)
+            if intent:
+                self.execute(intent)
+            else:
+                self.response = 'Аналитический модуль недоступен. Используйте одну из команд или кнопки ниже.'
+            self.voice_status = 'Локальная модель (Ollama) не отвечает · доступны команды и кнопки'
+            return
+        self.game.nurs.remember(request)
+        self.voice_status = 'Ответ N.U.R.S.'
+        self.response = self.quote(request.question) + ' N.U.R.S.: ' + request.reply
 
     def execute(self, intent):
         self.on_exit()
@@ -207,7 +249,7 @@ class Assistant(Scene):
             self.response='Связь двух следов пока является гипотезой. Найдите независимый архивный протокол и проверьте её на доске.'
 
     def draw(self, screen):
-        self.header(screen, 'N.U.R.S. / локальный помощник', 'Vosk + разрешённые команды / текстовый NLP · без облака и LLM')
+        self.header(screen, 'N.U.R.S. / локальный помощник', 'Голос (Vosk) и текст · локальная модель через Ollama · без облака')
         self.game.art.portrait(screen, 'nurs', (48, 190))
         self.game.ui.paragraph(screen, self.response, (240, 186, 945, 165), 21)
         self.game.ui.text(screen, self.voice_status, (48, 478), 19, CYAN)
@@ -218,7 +260,7 @@ class Assistant(Scene):
         while self.game.ui.font(23).size(visible)[0] > 1100:
             visible = visible[1:]
         self.game.ui.text(screen, '> ' + visible + ('|' if pygame.time.get_ticks() % 1000 < 500 else ''), (60, 526), 23, CYAN)
-        self.game.ui.text(screen, 'Enter — отправить. Кнопки доступны без распознавания текста.', (48, 590), 18, MUTED)
+        self.game.ui.text(screen, 'Enter — отправить. Спрашивайте своими словами; кнопки доступны без распознавания.', (48, 590), 18, MUTED)
         self.draw_buttons(screen)
 
 

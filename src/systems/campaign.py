@@ -17,6 +17,16 @@ def refresh_achievements(state, evidence):
     return new
 
 
+EPILOGUES = (
+    ('mole', 'Ермеков даёт показания о сделке 2020 года и сдаёт значок: дело Сейтовых закрыли в обмен на жизнь Никиты.'),
+    ('aidos_alibi', 'Айдос снят с подозрений: копию пропуска ему подбросили.'))
+
+
+def epilogue(state):
+    """Extra ending lines for optional deductions the player actually confirmed."""
+    return ' '.join(text for flag, text in EPILOGUES if flag in state.flags)
+
+
 def ending_allowed(state, evidence, ending):
     if ending not in ('arrest', 'revenge', 'release'):
         return False

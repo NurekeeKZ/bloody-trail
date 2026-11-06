@@ -324,6 +324,9 @@ class BranchEnding(Scene):
     def __init__(self,game,ending):
         super().__init__(game);self.ending=ending;self.age=0.;self.revealed=False
         self.title,self.text,self.speaker,self.color=self.CONTENT[ending]
+        if ending in ('truth','price','secret'):
+            from src.systems.campaign import epilogue
+            self.text=(self.text+' '+epilogue(game.state)).strip()
         self.button('Показать итог',(50,630,350,52),lambda:setattr(self,'revealed',True))
         self.button('Главное меню',(830,630,400,52),game.to_menu)
     def update(self,dt):self.age+=dt

@@ -76,13 +76,16 @@ class Game:
         self.hints=HintManager(state,self.puzzles.definitions)
         from src.systems.story_manager import StoryManager
         self.story_manager=StoryManager(state,self.evidence)
+        from src.ai.nurs_brain import NursBrain
+        self.nurs=NursBrain(state,self.catalog,self.rules,self.worlds,data('chapters'),self.puzzles.definitions,data('nurs_persona'))
 
     def evidence_changed(self, kind, identifier):
         if kind == 'collect':
             self.audio.play('evidence')
             if identifier not in self.state.discoveries['comments']:
                 self.state.discoveries['comments'].append(identifier)
-                self.toast('N.U.R.S.: новый источник — '+self.catalog[identifier]['source']+'. Сопоставьте его с уже найденными материалами.')
+                entry = self.catalog[identifier]
+                self.toast('N.U.R.S.: ' + entry.get('nurs', 'новый источник — '+entry['source']+'. Сопоставьте его с уже найденными материалами.'))
         if kind == 'collect' and identifier == 'photo' and self.state.narrative['started'] and not self.state.narrative['flashback_seen']:
             self.recall_blood_mark()
         if kind == 'conclusion' and identifier == 'blood_history':
@@ -327,6 +330,7 @@ class Game:
         if self.state.current_day != previous_day: self.state.time_slot = 0
         self.scenes.replace(Exploration(self))
         if self.state.current_day != previous_day:
+            if self.state.current_day >= 2: self.evidence.collect('expert_death')
             from src.scenes.campaign import ChapterIntro
             self.scenes.push(ChapterIntro(self, self.state.current_day))
         self.save()

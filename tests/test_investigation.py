@@ -75,12 +75,14 @@ class InvestigationTests(unittest.TestCase):
         self.key(pygame.K_b)
         board = self.game.scenes.current
         self.assertIsInstance(board, Board)
+        board.event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=board.question_rects()['initial_anomaly'].center))
         for eid in ('photo', 'metadata'):
             board.event(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=board.cards[eid].center))
-        self.click('Создать / выбрать гипотезу')
-        self.assertEqual(self.game.state.hypotheses[board.active_key]['status'], 'pending')
-        self.click('Проверить / подтвердить')
+        self.assertEqual(board.slot_values('initial_anomaly'), ['photo', 'metadata'])
+        self.assertNotIn('initial_anomaly', self.game.state.flags)
+        self.click('Проверить вывод')
         self.assertIn('initial_anomaly', self.game.state.flags)
+        self.assertEqual(self.game.state.hypotheses['metadata|photo']['status'], 'confirmed')
         self.assertFalse(self.game.evidence.can_finalize())
         self.key(pygame.K_ESCAPE)
         self.open_object('phone')
@@ -121,6 +123,41 @@ class InvestigationTests(unittest.TestCase):
         self.assertEqual(self.game.state.hypotheses[key]['status'], 'rejected')
         self.assertEqual(self.game.state.flags, [])
         self.assertFalse(self.game.state.evidence_records['photo']['verified'])
+
+    def test_slot_deduction_wrong_missing_and_correct(self):
+        for eid in ('anna', 'transit', 'order'):
+            self.game.evidence.collect(eid)
+        ok, message = self.game.evidence.check_deduction('route', ['anna', 'transit', 'order'])
+        self.assertFalse(ok)
+        self.assertIn('не все материалы', message)
+        self.assertEqual(self.game.state.statistics.get('deduction_mistakes', 0), 0)
+        self.game.evidence.collect('pass')
+        reputation = self.game.state.reputation
+        ok, message = self.game.evidence.check_deduction('route', ['anna', 'order', 'pass'])
+        self.assertFalse(ok)
+        self.assertIn('подходят 2 из 3', message)
+        self.assertEqual(self.game.state.reputation, reputation - 2)
+        self.assertNotIn('route', self.game.state.flags)
+        ok, _ = self.game.evidence.check_deduction('route', ['pass', 'anna', 'transit'])
+        self.assertTrue(ok)
+        self.assertIn('route', self.game.state.flags)
+        self.assertEqual(self.game.state.hypotheses['anna|transit']['status'], 'confirmed')
+
+    def test_board_slots_target_and_toggle(self):
+        for eid in ('photo', 'metadata'):
+            self.game.evidence.collect(eid)
+        board = Board(self.game)
+        board.choose_question('initial_anomaly')
+        board.place('photo')
+        board.place('metadata')
+        self.assertEqual(board.slot_values('initial_anomaly'), ['photo', 'metadata'])
+        board.clear_slot(0)
+        board.place('metadata')
+        self.assertEqual(board.slot_values('initial_anomaly'), [None, None])
+        board.clear_slot(0)
+        board.place('metadata')
+        self.assertEqual(board.slot_values('initial_anomaly'), ['metadata', None])
+        board.draw(self.game.screen)
 
     def test_valid_pair_needs_independent_third_source(self):
         for eid in ('anna', 'transit'):
